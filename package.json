@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/nachorsanz/complete-js-utils.git"
   },
-  "author": "Tu Nombre",
+  "author": "Nacho Rodríguez Sanz",
   "license": "MIT",
   "devDependencies": {
     "jest": "^29.7.0",
