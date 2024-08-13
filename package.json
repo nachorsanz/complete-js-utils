@@ -1,0 +1,23 @@
+{
+  "name": "complete-js-utils",
+  "version": "1.0.0",
+  "description": "A complete utility library for JavaScript and TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/complete-js-utils.git"
+  },
+  "author": "Tu Nombre",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.5.2",
+    "ts-jest": "^27.0.7",
+    "jest": "^27.4.3"
+  },
+  "dependencies": {}
+}
