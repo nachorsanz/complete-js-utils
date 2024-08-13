@@ -1,27 +1,57 @@
-name: Publish to npm
+name: NPM - Complete JS Utils
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main", "develop"]
 
 jobs:
-  publish:
+  unit-tests:
+    name: Unit-Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "16"
-          registry-url: "https://registry.npmjs.org/"
+          node-version: 16
+          cache: "npm"
+      - run: npm install --frozen-lockfile
 
+      - name: Unit Tests (using Jest)
+        run: npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'deploy')"
+    strategy:
+      matrix:
+        node-version: [16]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm install
       - run: npm ci
+      - run: npm run build --if-present
+    # - run: npm test
 
-      - run: npm run build
-
-      - name: Publish
-        run: npm publish
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm install
+      - run: npm ci
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
