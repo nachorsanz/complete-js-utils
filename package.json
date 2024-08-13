@@ -1,23 +1,27 @@
 {
   "name": "complete-js-utils",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2",
   "description": "A complete utility library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "update-version": "npm version prerelease --preid=alpha --no-git-tag-version",
+    "update-version-patch": "npm version patch --no-git-tag-version",
+    "update-version-minor": "npm version minor --no-git-tag-version",
+    "update-version-major": "npm version major --no-git-tag-version"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tu-usuario/complete-js-utils.git"
+    "url": "https://github.com/nachorsanz/complete-js-utils.git"
   },
   "author": "Tu Nombre",
   "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.5.4",
+    "jest": "^29.7.0",
+    "npm-run-all": "^4.1.5",
     "ts-jest": "^29.2.4",
-    "jest": "^29.7.0"
-  },
-  "dependencies": {}
+    "typescript": "^5.5.4"
+  }
 }
