@@ -1,6 +1,6 @@
 {
   "name": "complete-js-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A complete utility library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
