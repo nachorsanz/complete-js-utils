@@ -1,4 +1,4 @@
-import { sortArray, sortByMultipleKeys, sortByCustomComparator } from "../src/sortUtils";
+import { sortArray, sortByMultipleKeys, sortByCustomComparator, groupBy } from "../src/sortUtils";
 import { expect, test } from "@jest/globals";
 
 test("sorts array of objects by key", () => {
