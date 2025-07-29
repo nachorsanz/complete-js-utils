@@ -161,6 +161,30 @@ describe("ArrayUtils", () => {
     });
   });
 
+  describe("findIndex", () => {
+    it("should find index of element that matches predicate", () => {
+      expect(findIndex([1, 2, 3, 4], (x) => x > 2)).toBe(2);
+      expect(findIndex([1, 2, 3], (x) => x === 2)).toBe(1);
+    });
+    
+    it("should return -1 when no element matches", () => {
+      expect(findIndex([1, 2, 3], (x) => x > 10)).toBe(-1); // Line 122 coverage
+      expect(findIndex([], (x) => x > 0)).toBe(-1);
+    });
+  });
+
+  describe("findLastIndex", () => {
+    it("should find last index of element that matches predicate", () => {
+      expect(findLastIndex([1, 2, 3, 2, 4], (x) => x === 2)).toBe(3);
+      expect(findLastIndex([1, 2, 3, 4], (x) => x > 2)).toBe(3);
+    });
+    
+    it("should return -1 when no element matches", () => {
+      expect(findLastIndex([1, 2, 3], (x) => x > 10)).toBe(-1); // Line 131 coverage
+      expect(findLastIndex([], (x) => x > 0)).toBe(-1);
+    });
+  });
+
   describe("first", () => {
     it("should return first element", () => {
       expect(first([1, 2, 3])).toBe(1);

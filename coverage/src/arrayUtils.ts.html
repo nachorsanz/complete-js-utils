@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.23% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>200/210</span>
+                <span class='fraction'>210/210</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>21/23</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.07% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>49/51</span>
+                <span class='fraction'>51/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.93% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>150/158</span>
+                <span class='fraction'>158/158</span>
             </div>
         
             
@@ -453,21 +453,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -726,22 +726,22 @@ export const dropWhile = &lt;T&gt;(array: T[], predicate: (item: T) =&gt; boolea
   return array.slice(index);
 };
 &nbsp;
-export const findIndex = <span class="fstat-no" title="function not covered" >&lt;T&gt;(a</span>rray: T[], predicate: (item: T) =&gt; boolean): number =&gt; {
-<span class="cstat-no" title="statement not covered" >  for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; array.length; i++) {</span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (predicate(array[i])) {</span>
-<span class="cstat-no" title="statement not covered" >      return i;</span>
+export const findIndex = &lt;T&gt;(array: T[], predicate: (item: T) =&gt; boolean): number =&gt; {
+  for (let i = 0; i &lt; array.length; i++) {
+    if (predicate(array[i])) {
+      return i;
     }
   }
-<span class="cstat-no" title="statement not covered" >  return -1;</span>
+  return -1;
 };
 &nbsp;
-export const findLastIndex = <span class="fstat-no" title="function not covered" >&lt;T&gt;(a</span>rray: T[], predicate: (item: T) =&gt; boolean): number =&gt; {
-<span class="cstat-no" title="statement not covered" >  for (let i = <span class="cstat-no" title="statement not covered" >array.length - 1;</span> i &gt;= 0; i--) {</span>
-<span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (predicate(array[i])) {</span>
-<span class="cstat-no" title="statement not covered" >      return i;</span>
+export const findLastIndex = &lt;T&gt;(array: T[], predicate: (item: T) =&gt; boolean): number =&gt; {
+  for (let i = array.length - 1; i &gt;= 0; i--) {
+    if (predicate(array[i])) {
+      return i;
     }
   }
-<span class="cstat-no" title="statement not covered" >  return -1;</span>
+  return -1;
 };
 &nbsp;
 export const first = &lt;T&gt;(array: T[]): T | undefined =&gt; {
@@ -892,7 +892,7 @@ export const leastFrequent = &lt;T&gt;(array: T[]): T | undefined =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-29T17:59:40.519Z
+                at 2025-07-29T18:05:49.479Z
             </div>
         <script src="../prettify.js"></script>
         <script>
