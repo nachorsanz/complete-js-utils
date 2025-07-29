@@ -166,7 +166,7 @@ describe("ArrayUtils", () => {
       expect(findIndex([1, 2, 3, 4], (x) => x > 2)).toBe(2);
       expect(findIndex([1, 2, 3], (x) => x === 2)).toBe(1);
     });
-    
+
     it("should return -1 when no element matches", () => {
       expect(findIndex([1, 2, 3], (x) => x > 10)).toBe(-1); // Line 122 coverage
       expect(findIndex([], (x) => x > 0)).toBe(-1);
@@ -178,7 +178,7 @@ describe("ArrayUtils", () => {
       expect(findLastIndex([1, 2, 3, 2, 4], (x) => x === 2)).toBe(3);
       expect(findLastIndex([1, 2, 3, 4], (x) => x > 2)).toBe(3);
     });
-    
+
     it("should return -1 when no element matches", () => {
       expect(findLastIndex([1, 2, 3], (x) => x > 10)).toBe(-1); // Line 131 coverage
       expect(findLastIndex([], (x) => x > 0)).toBe(-1);

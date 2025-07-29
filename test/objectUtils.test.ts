@@ -83,11 +83,11 @@ describe("ObjectUtils", () => {
       expect(get(testObject, "address.city")).toBe("New York");
       expect(get(testObject, "address.country", "USA")).toBe("USA");
     });
-    
+
     it("should return default value when property not found", () => {
       expect(get(testObject, "nonexistent.property", "default")).toBe("default");
     });
-    
+
     it("should return default value when accessing property on null", () => {
       const objWithNull = { data: null };
       expect(get(objWithNull, "data.nested", "default")).toBe("default");
@@ -130,20 +130,20 @@ describe("ObjectUtils", () => {
       expect(isEqual(obj1, obj2)).toBe(true);
       expect(isEqual(obj1, obj3)).toBe(false);
     });
-    
+
     it("should handle null and undefined comparisons", () => {
       expect(isEqual(null, null)).toBe(true); // Actually null equals null
-      expect(isEqual(undefined, undefined)).toBe(true); // Actually undefined equals undefined  
+      expect(isEqual(undefined, undefined)).toBe(true); // Actually undefined equals undefined
       expect(isEqual(null, undefined)).toBe(false);
       expect(isEqual(null, "string")).toBe(false); // Line 110 test - null vs non-null
       expect(isEqual(undefined, 123)).toBe(false); // null vs non-null
     });
-    
+
     it("should handle different types", () => {
       expect(isEqual("string", 123)).toBe(false); // Line 111 test
       expect(isEqual({}, [])).toBe(false);
     });
-    
+
     it("should compare arrays", () => {
       expect(isEqual([1, 2, 3], [1, 2, 3])).toBe(true);
       expect(isEqual([1, 2], [1, 2, 3])).toBe(false); // Different lengths - Line 114
