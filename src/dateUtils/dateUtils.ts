@@ -97,19 +97,34 @@ export const getLastDayOfMonth = (year: number, month: number): number => {
 };
 
 export const getMonthName = (month: number, countrieType: DateCountry = "es-ES"): string => {
-  return new Intl.DateTimeFormat(countrieType, { month: "long" }).format(new Date(2000, month));
+  // Convert 1-based month (1=January, 7=July) to 0-based for JavaScript Date
+  return new Intl.DateTimeFormat(countrieType, { month: "long" }).format(new Date(2000, month - 1));
 };
 
 export const getShortMonthName = (month: number, countrieType: DateCountry = "es-ES"): string => {
-  return new Intl.DateTimeFormat(countrieType, { month: "short" }).format(new Date(2000, month));
+  // Convert 1-based month (1=January, 7=July) to 0-based for JavaScript Date
+  return new Intl.DateTimeFormat(countrieType, { month: "short" }).format(new Date(2000, month - 1));
 };
 
 export const getWeekdayName = (day: number, countrieType: DateCountry = "es-ES"): string => {
-  return new Intl.DateTimeFormat(countrieType, { weekday: "long" }).format(new Date(2000, 0, day + 1));
+  // Convert 1-based weekday (1=Monday, 7=Sunday) to JavaScript day
+  // Use a known Monday as reference: January 4, 2021 was a Monday
+  const mondayReference = new Date(2021, 0, 4); // Known Monday
+  const daysToAdd = (day === 7 ? 0 : day) - 1; // Sunday=0, Monday=1, etc.
+  const targetDate = new Date(mondayReference);
+  targetDate.setDate(mondayReference.getDate() + daysToAdd);
+
+  return new Intl.DateTimeFormat(countrieType, { weekday: "long" }).format(targetDate);
 };
 
 export const getShortWeekdayName = (day: number, countrieType: DateCountry = "es-ES"): string => {
-  return new Intl.DateTimeFormat(countrieType, { weekday: "short" }).format(new Date(2000, 0, day + 1));
+  // Convert 1-based weekday (1=Monday, 7=Sunday) to JavaScript day
+  const mondayReference = new Date(2021, 0, 4); // Known Monday
+  const daysToAdd = (day === 7 ? 0 : day) - 1; // Sunday=0, Monday=1, etc.
+  const targetDate = new Date(mondayReference);
+  targetDate.setDate(mondayReference.getDate() + daysToAdd);
+
+  return new Intl.DateTimeFormat(countrieType, { weekday: "short" }).format(targetDate);
 };
 
 export const getDaysArray = (year: number, month: number): Date[] => {
@@ -122,27 +137,234 @@ export const getDaysArray = (year: number, month: number): Date[] => {
 };
 
 export const getMonthsArray = (countrieType: DateCountry = "es-ES"): string[] => {
-  return Array.from({ length: 12 }, (_, i) => getMonthName(i, countrieType));
+  return Array.from({ length: 12 }, (_, i) => getMonthName(i + 1, countrieType)); // 1-based months
 };
 
 export const getShortMonthsArray = (countrieType: DateCountry = "es-ES"): string[] => {
-  return Array.from({ length: 12 }, (_, i) => getShortMonthName(i, countrieType));
+  return Array.from({ length: 12 }, (_, i) => getShortMonthName(i + 1, countrieType)); // 1-based months
 };
 
 export const getWeekdaysArray = (countrieType: DateCountry = "es-ES"): string[] => {
-  return Array.from({ length: 7 }, (_, i) => getWeekdayName(i, countrieType));
+  return Array.from({ length: 7 }, (_, i) => getWeekdayName(i + 1, countrieType)); // 1-based days
 };
 
 export const getShortWeekdaysArray = (countrieType: DateCountry = "es-ES"): string[] => {
-  return Array.from({ length: 7 }, (_, i) => getShortWeekdayName(i, countrieType));
+  return Array.from({ length: 7 }, (_, i) => getShortWeekdayName(i + 1, countrieType)); // 1-based days
 };
 
 export const getYearsArray = (start: number, end: number): number[] => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
 
-export const isValidDate = (date: Date): boolean => {
+export const addHours = (date: Date, hours: number): Date => {
+  const result = new Date(date);
+  result.setHours(result.getHours() + hours);
+  return result;
+};
+
+export const addMinutes = (date: Date, minutes: number): Date => {
+  const result = new Date(date);
+  result.setMinutes(result.getMinutes() + minutes);
+  return result;
+};
+
+export const addSeconds = (date: Date, seconds: number): Date => {
+  const result = new Date(date);
+  result.setSeconds(result.getSeconds() + seconds);
+  return result;
+};
+
+export const addMonths = (date: Date, months: number): Date => {
+  const result = new Date(date);
+  result.setMonth(result.getMonth() + months);
+  return result;
+};
+
+export const addYears = (date: Date, years: number): Date => {
+  const result = new Date(date);
+  result.setFullYear(result.getFullYear() + years);
+  return result;
+};
+
+export const startOfDay = (date: Date): Date => {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
+};
+
+export const endOfDay = (date: Date): Date => {
+  const result = new Date(date);
+  result.setHours(23, 59, 59, 999);
+  return result;
+};
+
+export const startOfWeek = (date: Date, startOfWeekDay: number = 1): Date => {
+  const result = new Date(date);
+  const day = result.getDay();
+  const diff = (day < startOfWeekDay ? 7 : 0) + day - startOfWeekDay;
+  result.setDate(result.getDate() - diff);
+  return startOfDay(result);
+};
+
+export const endOfWeek = (date: Date, startOfWeekDay: number = 1): Date => {
+  const result = startOfWeek(date, startOfWeekDay);
+  result.setDate(result.getDate() + 6);
+  return endOfDay(result);
+};
+
+export const startOfMonth = (date: Date): Date => {
+  const result = new Date(date);
+  result.setDate(1);
+  return startOfDay(result);
+};
+
+export const endOfMonth = (date: Date): Date => {
+  const result = new Date(date);
+  result.setMonth(result.getMonth() + 1, 0);
+  return endOfDay(result);
+};
+
+export const startOfYear = (date: Date): Date => {
+  const result = new Date(date);
+  result.setMonth(0, 1);
+  return startOfDay(result);
+};
+
+export const endOfYear = (date: Date): Date => {
+  const result = new Date(date);
+  result.setMonth(11, 31);
+  return endOfDay(result);
+};
+
+export const getQuarter = (date: Date): number => {
+  return Math.floor(date.getMonth() / 3) + 1;
+};
+
+export const startOfQuarter = (date: Date): Date => {
+  const quarter = getQuarter(date);
+  const month = (quarter - 1) * 3;
+  const result = new Date(date);
+  result.setMonth(month, 1);
+  return startOfDay(result);
+};
+
+export const endOfQuarter = (date: Date): Date => {
+  const quarter = getQuarter(date);
+  const month = quarter * 3 - 1;
+  const result = new Date(date);
+  result.setMonth(month + 1, 0);
+  return endOfDay(result);
+};
+
+export const differenceInHours = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / (1000 * 60 * 60));
+};
+
+export const differenceInMinutes = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / (1000 * 60));
+};
+
+export const differenceInSeconds = (date1: Date, date2: Date): number => {
+  const diffTime = Math.abs(date2.getTime() - date1.getTime());
+  return Math.ceil(diffTime / 1000);
+};
+
+export const differenceInMonths = (date1: Date, date2: Date): number => {
+  const years = date2.getFullYear() - date1.getFullYear();
+  const months = date2.getMonth() - date1.getMonth();
+  return years * 12 + months;
+};
+
+export const differenceInYears = (date1: Date, date2: Date): number => {
+  return date2.getFullYear() - date1.getFullYear();
+};
+
+export const age = (birthDate: Date, referenceDate: Date = new Date()): number => {
+  let age = referenceDate.getFullYear() - birthDate.getFullYear();
+  const monthDiff = referenceDate.getMonth() - birthDate.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && referenceDate.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
+};
+
+export const timeAgo = (date: Date, locale: string = "en-US"): string => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+
+  if (diffYears > 0) return rtf.format(-diffYears, "year");
+  if (diffMonths > 0) return rtf.format(-diffMonths, "month");
+  if (diffWeeks > 0) return rtf.format(-diffWeeks, "week");
+  if (diffDays > 0) return rtf.format(-diffDays, "day");
+  if (diffHours > 0) return rtf.format(-diffHours, "hour");
+  if (diffMins > 0) return rtf.format(-diffMins, "minute");
+  return rtf.format(-diffSecs, "second");
+};
+
+export const parseDate = (dateString: string): Date | null => {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
+};
+
+export const isValidDate = (date: any): boolean => {
   return date instanceof Date && !isNaN(date.getTime());
+};
+
+export const toISOString = (date: Date): string => {
+  return date.toISOString();
+};
+
+export const fromTimestamp = (timestamp: number): Date => {
+  return new Date(timestamp);
+};
+
+export const toTimestamp = (date: Date): number => {
+  return date.getTime();
+};
+
+export const getWeekNumber = (date: Date): number => {
+  const target = new Date(date.valueOf());
+  const dayNr = (date.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNr + 3);
+  const firstThursday = target.valueOf();
+  target.setMonth(0, 1);
+  if (target.getDay() !== 4) {
+    target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
+  }
+  return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+};
+
+export const getDayOfYear = (date: Date): number => {
+  const start = new Date(date.getFullYear(), 0, 0);
+  const diff = date.getTime() - start.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+};
+
+export const getWeeksInMonth = (date: Date): number => {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const firstWeek = getWeekNumber(firstDay);
+  const lastWeek = getWeekNumber(lastDay);
+  return lastWeek - firstWeek + 1;
+};
+
+export const isSameWeek = (date1: Date, date2: Date): boolean => {
+  const start1 = startOfWeek(date1);
+  const start2 = startOfWeek(date2);
+  return start1.getTime() === start2.getTime();
 };
 
 export const isSameMonth = (date1: Date, date2: Date): boolean => {
