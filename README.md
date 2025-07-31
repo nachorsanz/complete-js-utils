@@ -11,4 +11,4 @@ npm install complete-js-utils
 yarn add complete-js-utils
 ```
 
-Go to the [documentation](https://complete-js-utils-docs.vercel.app) for more details on usage and examples.
+Go to the [documentation](https://complete-js-utils.com) for more details on usage and examples.
