@@ -22,7 +22,7 @@ export const createDateFormatter = ({locale, timezone}: FormatDateOptions = { ti
       DD: () => getFormattedPart(date, { day: '2-digit' }),
       dddd: () => getFormattedPart(date, { weekday: 'long' }),
       ddd: () => getFormattedPart(date, { weekday: 'short' }),
-      MMMM: () => getMonthName(date.getMonth() + 1, locale),
+      MMMM: () => getFormattedPart(date, { month: 'long' }),
       MMM: () => getFormattedPart(date, { month: 'short' }),
       MM: () => getFormattedPart(date, { month: '2-digit' }),
       // Formatos de tiempo
