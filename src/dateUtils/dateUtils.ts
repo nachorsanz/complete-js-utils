@@ -1,60 +1,75 @@
-import { DateCountry, DateFormat } from "./dateUtils.types";
+import {  DateCountry, DateFormat, FormatDateOptions } from "./dateUtils.types";
 
-export const formatDate = (date: Date, format: DateFormat, countrieType: DateCountry = "es-ES"): string => {
-  const options: Intl.DateTimeFormatOptions = {};
 
-  switch (format) {
-    case "YYYY-MM-DD":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "DD-MM-YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "MM-DD-YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "YYYY/MM/DD":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "DD/MM/YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "MM/DD/YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "YYYY.MM.DD":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "DD.MM.YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
-    case "MM.DD.YYYY":
-      options.year = "numeric";
-      options.month = "2-digit";
-      options.day = "2-digit";
-      break;
+export const createDateFormatter = ({locale, timezone}: FormatDateOptions = { timezone: 'Europe/Madrid', locale: 'es-ES'}) => {
+  const getFormattedPart = (
+    date: Date,
+    config?:  Intl.DateTimeFormatOptions,
+  ): string => {
+    return new Intl.DateTimeFormat(locale, {
+      timeZone: timezone,
+      ...config,
+    }).format(date);
+  };
 
-    default:
-      throw new Error("Formato no soportado");
-  }
-  return new Intl.DateTimeFormat(countrieType, options).format(date);
-};
+  return (date: Date, format: DateFormat): string => {
+   
+    const formatsMap: Record<string, () => string> = {
+      // Los formatos siempre de mayor especifidad a menos p.ej MMMM (mes completo) > MMM (mes corto) > MM (mes)
+      // Formatos de fecha
+      YYYY: () => getFormattedPart(date, { year: 'numeric' }),
+      YY: () => getFormattedPart(date, { year: '2-digit' }),
+      DD: () => getFormattedPart(date, { day: '2-digit' }),
+      dddd: () => getFormattedPart(date, { weekday: 'long' }),
+      ddd: () => getFormattedPart(date, { weekday: 'short' }),
+      MMMM: () => getFormattedPart(date, { month: 'long' }),
+      MMM: () => getFormattedPart(date, { month: 'short' }),
+      MM: () => getFormattedPart(date, { month: '2-digit' }),
+      // Formatos de tiempo
+      HH: () => getFormattedPart(date, { hour: '2-digit', hour12: false }).split(" ")[0],
+      hh: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).split(" ")[0],
+      mm: () => getFormattedPart(date, { minute: '2-digit' }),
+      sss: () => {
+        return date.getMilliseconds().toString().padStart(3, '0');
+      },
+      ss: () => getFormattedPart(date, { second: '2-digit' }),
+      A: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM') ? 'AM' : 'PM',
+      a: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM') ? 'am' : 'pm',
+      // Timestamps
+      X: () => Math.floor(date.getTime() / 1000).toString(),
+      x: () => date.getTime().toString(),
+      // ISO_8601 = YYYY-MM-DDTHH:mm:ss.sssZ
+      "ISO_8601": () => date.toISOString() 
+    };
+  
+    // Dividir el string en segmentos usando corchetes como delimitadores
+    const segments = format.split(/(\[[^\]]*\])/);
+    
+    // Procesar cada segmento
+    const processedSegments = segments.map((segment, index) => {
+     
+      if (index % 2 === 0) {
+        // Los segmentos en índices pares están fuera de corchetes - procesar formatos
+  
+        const formatRegex = new RegExp(Object.keys(formatsMap).join('|'), 'g');
+  
+        return segment.replace(
+          formatRegex,
+          (match) => formatsMap[match]() || match
+        );
+      } else {
+         // Los segmentos en índices impares están dentro de corchetes - extraer el contenido literal
+        return segment.replace(/^\[|\]$/g, '');
+      }
+    });
+    
+    const result = processedSegments.join('');
+  
+    return result;
+  };
+}
+
+export const formatDate = createDateFormatter({ timezone: 'Europe/Madrid', locale: 'es-ES'})
 
 export const addDays = (date: Date, days: number): Date => {
   const result = new Date(date);
