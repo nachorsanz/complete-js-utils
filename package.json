@@ -1,17 +1,43 @@
 {
   "name": "complete-js-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A complete utility library for JavaScript and TypeScript",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "jest",
     "update-version": "npm version prerelease --preid=alpha --no-git-tag-version",
     "update-version-patch": "npm version patch --no-git-tag-version",
     "update-version-minor": "npm version minor --no-git-tag-version",
     "update-version-major": "npm version major --no-git-tag-version"
   },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "utilities",
+    "utils",
+    "library",
+    "helpers",
+    "date",
+    "string",
+    "array",
+    "object",
+    "validation"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/nachorsanz/complete-js-utils.git"

@@ -1,0 +1,32 @@
+# Source files
+src/
+test/
+
+# Development files
+.git/
+.github/
+.gitignore
+.vscode/
+.idea/
+
+# Development dependencies
+node_modules/
+*.log
+*.tgz
+
+# Configuration files
+tsconfig.json
+jest.config.js
+.eslintrc*
+.prettierrc*
+
+# Documentation
+README.md
+functions-catalog.md
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Build artifacts (keep only what's needed)
+*.tsbuildinfo
