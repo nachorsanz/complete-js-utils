@@ -284,7 +284,7 @@ describe("Date Utils", () => {
           });
 
           describe("UTC - Time - timezone: Asia/Singapore", () => {
-            it.skip("should handle time zones correctly", () => {
+            it("should handle time zones correctly", () => {
               const formatter = createDateFormatter({
                 timezone: "Asia/Singapore",
                 locale: "en-US",

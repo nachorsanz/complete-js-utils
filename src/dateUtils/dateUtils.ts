@@ -1,11 +1,9 @@
-import {  DateCountry, DateFormat, FormatDateOptions } from "./dateUtils.types";
+import { DateCountry, DateFormat, FormatDateOptions } from "./dateUtils.types";
 
-
-export const createDateFormatter = ({locale, timezone}: FormatDateOptions = { timezone: 'Europe/Madrid', locale: 'es-ES'}) => {
-  const getFormattedPart = (
-    date: Date,
-    config?:  Intl.DateTimeFormatOptions,
-  ): string => {
+export const createDateFormatter = (
+  { locale, timezone }: FormatDateOptions = { timezone: "Europe/Madrid", locale: "es-ES" },
+) => {
+  const getFormattedPart = (date: Date, config?: Intl.DateTimeFormatOptions): string => {
     return new Intl.DateTimeFormat(locale, {
       timeZone: timezone,
       ...config,
@@ -13,63 +11,83 @@ export const createDateFormatter = ({locale, timezone}: FormatDateOptions = { ti
   };
 
   return (date: Date, format: DateFormat): string => {
-   
+    // Helper to get 24h hour normalized to 00-23 to avoid engines returning "24" at midnight
+    const getHour24TwoDigits = (): string => {
+      try {
+        const parts = new Intl.DateTimeFormat(locale, {
+          timeZone: timezone,
+          hour: "2-digit",
+          hour12: false,
+          hourCycle: "h23",
+        }).formatToParts(date);
+        const hourStr = parts.find((p) => p.type === "hour")?.value;
+        if (hourStr != null) {
+          const num = parseInt(hourStr, 10);
+          if (!Number.isNaN(num)) {
+            // Normalize possible 24 to 00 using modulo 24
+            return String(num % 24).padStart(2, "0");
+          }
+        }
+      } catch {
+        // ignore and use fallback
+      }
+      // Fallback to previous behavior but normalize "24" explicitly
+      const raw = getFormattedPart(date, { hour: "2-digit", hour12: false }).split(" ")[0];
+      return raw === "24" ? "00" : raw;
+    };
+
     const formatsMap: Record<string, () => string> = {
       // Los formatos siempre de mayor especifidad a menos p.ej MMMM (mes completo) > MMM (mes corto) > MM (mes)
       // Formatos de fecha
-      YYYY: () => getFormattedPart(date, { year: 'numeric' }),
-      YY: () => getFormattedPart(date, { year: '2-digit' }),
-      DD: () => getFormattedPart(date, { day: '2-digit' }),
-      dddd: () => getFormattedPart(date, { weekday: 'long' }),
-      ddd: () => getFormattedPart(date, { weekday: 'short' }),
-      MMMM: () => getFormattedPart(date, { month: 'long' }),
-      MMM: () => getFormattedPart(date, { month: 'short' }),
-      MM: () => getFormattedPart(date, { month: '2-digit' }),
+      YYYY: () => getFormattedPart(date, { year: "numeric" }),
+      YY: () => getFormattedPart(date, { year: "2-digit" }),
+      DD: () => getFormattedPart(date, { day: "2-digit" }),
+      dddd: () => getFormattedPart(date, { weekday: "long" }),
+      ddd: () => getFormattedPart(date, { weekday: "short" }),
+      MMMM: () => getFormattedPart(date, { month: "long" }),
+      MMM: () => getFormattedPart(date, { month: "short" }),
+      MM: () => getFormattedPart(date, { month: "2-digit" }),
       // Formatos de tiempo
-      HH: () => getFormattedPart(date, { hour: '2-digit', hour12: false }).split(" ")[0],
-      hh: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).split(" ")[0],
-      mm: () => getFormattedPart(date, { minute: '2-digit' }),
+      HH: () => getHour24TwoDigits(),
+      hh: () => getFormattedPart(date, { hour: "2-digit", hour12: true }).split(" ")[0],
+      mm: () => getFormattedPart(date, { minute: "2-digit" }),
       sss: () => {
-        return date.getMilliseconds().toString().padStart(3, '0');
+        return date.getMilliseconds().toString().padStart(3, "0");
       },
-      ss: () => getFormattedPart(date, { second: '2-digit' }),
-      A: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM') ? 'AM' : 'PM',
-      a: () => getFormattedPart(date, { hour: '2-digit', hour12: true }).includes('AM') ? 'am' : 'pm',
+      ss: () => getFormattedPart(date, { second: "2-digit" }),
+      A: () => (getFormattedPart(date, { hour: "2-digit", hour12: true }).includes("AM") ? "AM" : "PM"),
+      a: () => (getFormattedPart(date, { hour: "2-digit", hour12: true }).includes("AM") ? "am" : "pm"),
       // Timestamps
       X: () => Math.floor(date.getTime() / 1000).toString(),
       x: () => date.getTime().toString(),
       // ISO_8601 = YYYY-MM-DDTHH:mm:ss.sssZ
-      "ISO_8601": () => date.toISOString() 
+      ISO_8601: () => date.toISOString(),
     };
-  
+
     // Dividir el string en segmentos usando corchetes como delimitadores
     const segments = format.split(/(\[[^\]]*\])/);
-    
+
     // Procesar cada segmento
     const processedSegments = segments.map((segment, index) => {
-     
       if (index % 2 === 0) {
         // Los segmentos en índices pares están fuera de corchetes - procesar formatos
-  
-        const formatRegex = new RegExp(Object.keys(formatsMap).join('|'), 'g');
-  
-        return segment.replace(
-          formatRegex,
-          (match) => formatsMap[match]() || match
-        );
+
+        const formatRegex = new RegExp(Object.keys(formatsMap).join("|"), "g");
+
+        return segment.replace(formatRegex, (match) => formatsMap[match]() || match);
       } else {
-         // Los segmentos en índices impares están dentro de corchetes - extraer el contenido literal
-        return segment.replace(/^\[|\]$/g, '');
+        // Los segmentos en índices impares están dentro de corchetes - extraer el contenido literal
+        return segment.replace(/^\[|\]$/g, "");
       }
     });
-    
-    const result = processedSegments.join('');
-  
+
+    const result = processedSegments.join("");
+
     return result;
   };
-}
+};
 
-export const formatDate = createDateFormatter({ timezone: 'Europe/Madrid', locale: 'es-ES'})
+export const formatDate = createDateFormatter({ timezone: "Europe/Madrid", locale: "es-ES" });
 
 export const addDays = (date: Date, days: number): Date => {
   const result = new Date(date);
