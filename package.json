@@ -3,13 +3,13 @@
   "version": "1.1.0-rc",
   "description": "A complete utility library for JavaScript and TypeScript",
   "main": "dist/index.js",
-  "module": "dist/esm/index.js",
+  "module": "dist/esm/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/esm/index.js"
+      "import": "./dist/esm/index.mjs"
     }
   },
   "sideEffects": false,
@@ -17,9 +17,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "run-s build:cjs build:esm",
+    "build": "run-s build:cjs build:esm postbuild:esm",
     "build:cjs": "tsc -p tsconfig.json",
     "build:esm": "tsc -p tsconfig.esm.json",
+    "postbuild:esm": "node scripts/fix-esm-extensions.cjs",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
     "test": "jest",
