@@ -2,7 +2,7 @@
  * Storage utilities: safe wrappers around localStorage/sessionStorage + in-memory fallback
  */
 
-type StorageLike = {
+export type StorageLike = {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
@@ -11,7 +11,7 @@ type StorageLike = {
 
 const hasWindow = typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
-class MemoryStorage implements StorageLike {
+export class MemoryStorage implements StorageLike {
   private store = new Map<string, string>();
   getItem(key: string): string | null {
     return this.store.has(key) ? this.store.get(key)! : null;
@@ -27,7 +27,7 @@ class MemoryStorage implements StorageLike {
   }
 }
 
-const createSafeStorage = (storage: StorageLike | null): StorageLike => {
+export const createSafeStorage = (storage: StorageLike | null): StorageLike => {
   if (!storage) return new MemoryStorage();
   try {
     const testKey = "__test__";

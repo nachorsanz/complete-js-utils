@@ -23,6 +23,7 @@ import {
   stripHtml,
   highlightText,
 } from "../src/stringUtils";
+import { jest, describe, expect } from "@jest/globals";
 
 // Mock DOM for HTML manipulation functions
 global.document = {

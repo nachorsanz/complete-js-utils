@@ -32,6 +32,7 @@ import {
   map,
   inRange,
 } from "../src/numberUtils";
+import { describe, expect } from "@jest/globals";
 
 describe("NumberUtils", () => {
   describe("clamp", () => {

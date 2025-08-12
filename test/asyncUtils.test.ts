@@ -31,6 +31,28 @@ describe("AsyncUtils", () => {
     expect(attempts).toBe(3); // initial + 2 retries
   });
 
+  test("retry calls onRetry callback", async () => {
+    const calls: Array<{ attempt: number; msg: string }> = [];
+    let attempts = 0;
+    const fn = async () => {
+      attempts++;
+      if (attempts < 2) throw new Error("fail-once");
+      return "ok";
+    };
+    const result = await retry(fn, {
+      retries: 3,
+      minTimeout: 5,
+      factor: 1,
+      onRetry: (attempt, err) => calls.push({ attempt, msg: (err as Error).message }),
+    });
+    expect(result).toBe("ok");
+    expect(calls).toEqual([{ attempt: 1, msg: "fail-once" }]);
+  });
+
+  test("pLimit throws when concurrency < 1", () => {
+    expect(() => pLimit(0)).toThrow(/Concurrency must be at least 1/);
+  });
+
   test("withTimeout resolves before timeout", async () => {
     const result = await withTimeout(Promise.resolve(42), 100);
     expect(result).toBe(42);

@@ -22,6 +22,7 @@ import {
   arrayToCSV,
   compressImage,
 } from "../src/fileUtils";
+import { jest, describe, expect } from "@jest/globals";
 
 // Mock DOM APIs for testing
 global.document = {
@@ -384,7 +385,7 @@ Bob,35,Chicago`;
       getContext: jest.fn(() => ({
         drawImage: jest.fn(),
       })),
-      toBlob: jest.fn((callback, type, quality) => {
+      toBlob: jest.fn((callback: (blob: Blob) => void, type?: string, quality?: number) => {
         const blob = new Blob(["compressed image data"]);
         callback(blob);
       }),

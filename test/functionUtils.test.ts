@@ -9,19 +9,19 @@ describe("FunctionUtils", () => {
     const d = debounce(fn, 100);
     d();
     d();
-    expect(fn).not.toBeCalled();
+    expect(fn).not.toHaveBeenCalled();
     jest.advanceTimersByTime(100);
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("debounce leading", () => {
     const fn = jest.fn();
     const d = debounce(fn, 100, { leading: true, trailing: false });
     d();
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
     jest.advanceTimersByTime(100);
     d();
-    expect(fn).toBeCalledTimes(2);
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 
   test("debounce cancel and flush", () => {
@@ -31,12 +31,12 @@ describe("FunctionUtils", () => {
     // cancel should prevent trailing call
     d.cancel();
     jest.advanceTimersByTime(200);
-    expect(fn).not.toBeCalled();
+    expect(fn).not.toHaveBeenCalled();
 
     // try again and flush immediately
     d("b");
     d.flush();
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("throttle", () => {
@@ -44,9 +44,9 @@ describe("FunctionUtils", () => {
     const t = throttle(fn, 100);
     t();
     t();
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
     jest.advanceTimersByTime(100);
-    expect(fn).toBeCalledTimes(2);
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 
   test("throttle cancel", () => {
@@ -58,7 +58,7 @@ describe("FunctionUtils", () => {
     // cancel should prevent the scheduled call
     t.cancel();
     jest.advanceTimersByTime(200);
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("once", () => {
@@ -66,7 +66,7 @@ describe("FunctionUtils", () => {
     const o = once(fn);
     expect(o(2)).toBe(4);
     expect(o(3)).toBe(4);
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test("memoize", () => {
@@ -74,10 +74,10 @@ describe("FunctionUtils", () => {
     const m = memoize(fn);
     expect(m(2)).toBe(4);
     expect(m(2)).toBe(4);
-    expect(fn).toBeCalledTimes(1);
+    expect(fn).toHaveBeenCalledTimes(1);
     m.clear();
     expect(m(2)).toBe(4);
-    expect(fn).toBeCalledTimes(2);
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 
   test("compose and pipe", () => {

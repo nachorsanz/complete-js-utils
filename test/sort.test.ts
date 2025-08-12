@@ -41,6 +41,15 @@ describe("SortUtils", () => {
     ]);
   });
 
+  test("sorts array desc order", () => {
+    const array = [
+      { name: "Bob", age: 25 },
+      { name: "Alice", age: 30 },
+    ];
+    const sorted = sortArray(array, "age", "desc");
+    expect(sorted[0].age).toBe(30);
+  });
+
   test("sorts array of objects by multiple keys", () => {
     const array = [
       { name: "Bob", age: 25 },
@@ -110,6 +119,12 @@ describe("SortUtils", () => {
     expect(rotated).toEqual([3, 4, 5, 1, 2]);
   });
 
+  test("rotates with times greater than length", () => {
+    const array = [1, 2, 3];
+    const rotated = rotateArray(array, 5); // naive slice still returns a value
+    expect(rotated).toEqual([...array.slice(5), ...array.slice(0, 5)]);
+  });
+
   test("chunks array", () => {
     const array = [1, 2, 3, 4, 5, 6, 7, 8];
     const chunked = chunkArray(array, 3);
@@ -117,6 +132,15 @@ describe("SortUtils", () => {
       [1, 2, 3],
       [4, 5, 6],
       [7, 8],
+    ]);
+  });
+
+  test("chunks exact multiples of size", () => {
+    const array = [1, 2, 3, 4, 5, 6];
+    const chunked = chunkArray(array, 3);
+    expect(chunked).toEqual([
+      [1, 2, 3],
+      [4, 5, 6],
     ]);
   });
 

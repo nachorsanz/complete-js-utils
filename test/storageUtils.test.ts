@@ -6,6 +6,7 @@ import {
   remove,
   clear,
   namespacedStorage,
+  MemoryStorage,
 } from "../src/storageUtils";
 import { describe, test, expect } from "@jest/globals";
 
@@ -24,9 +25,9 @@ describe("StorageUtils", () => {
     setJSON(safeLocalStorage, "obj", { a: 1 });
     expect(getJSON(safeLocalStorage, "obj", { a: 0 })).toEqual({ a: 1 });
     expect(getJSON(safeLocalStorage, "missing", { b: 2 })).toEqual({ b: 2 });
-  // invalid JSON should fallback
-  safeLocalStorage.setItem("bad", "{invalid}");
-  expect(getJSON(safeLocalStorage, "bad", { ok: false })).toEqual({ ok: false });
+    // invalid JSON should fallback
+    safeLocalStorage.setItem("bad", "{invalid}");
+    expect(getJSON(safeLocalStorage, "bad", { ok: false })).toEqual({ ok: false });
   });
 
   test("remove and clear", () => {
@@ -86,5 +87,29 @@ describe("StorageUtils", () => {
 
     // restore
     (global as any).window.localStorage = originalLS;
+  });
+
+  test("MemoryStorage basic operations cover all methods", () => {
+    const mem = new MemoryStorage();
+    expect(mem.getItem("x")).toBeNull();
+    mem.setItem("x", "1");
+    expect(mem.getItem("x")).toBe("1");
+    mem.removeItem("x");
+    expect(mem.getItem("x")).toBeNull();
+    mem.setItem("a", "2");
+    mem.setItem("b", "3");
+    mem.clear();
+    expect(mem.getItem("a")).toBeNull();
+    expect(mem.getItem("b")).toBeNull();
+  });
+
+  test("getJSON catch branch on invalid JSON using custom storage", () => {
+    const badStorage = {
+      getItem: () => "{invalid}",
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+    } as any;
+    expect(getJSON(badStorage, "k", { ok: true })).toEqual({ ok: true });
   });
 });

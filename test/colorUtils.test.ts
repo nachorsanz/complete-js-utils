@@ -24,6 +24,7 @@ import {
   type HSL,
   type HSV,
 } from "../src/colorUtils";
+import { describe, expect } from "@jest/globals";
 
 describe("ColorUtils", () => {
   describe("hexToRgb", () => {
