@@ -24,6 +24,21 @@ describe("FunctionUtils", () => {
     expect(fn).toBeCalledTimes(2);
   });
 
+  test("debounce cancel and flush", () => {
+    const fn = jest.fn();
+    const d = debounce(fn, 100);
+    d("a");
+    // cancel should prevent trailing call
+    d.cancel();
+    jest.advanceTimersByTime(200);
+    expect(fn).not.toBeCalled();
+
+    // try again and flush immediately
+    d("b");
+    d.flush();
+    expect(fn).toBeCalledTimes(1);
+  });
+
   test("throttle", () => {
     const fn = jest.fn();
     const t = throttle(fn, 100);
@@ -32,6 +47,18 @@ describe("FunctionUtils", () => {
     expect(fn).toBeCalledTimes(1);
     jest.advanceTimersByTime(100);
     expect(fn).toBeCalledTimes(2);
+  });
+
+  test("throttle cancel", () => {
+    const fn = jest.fn();
+    const t = throttle(fn, 100);
+    t(); // call immediately
+    // schedule a trailing call
+    t();
+    // cancel should prevent the scheduled call
+    t.cancel();
+    jest.advanceTimersByTime(200);
+    expect(fn).toBeCalledTimes(1);
   });
 
   test("once", () => {
