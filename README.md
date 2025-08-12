@@ -67,6 +67,7 @@ const onScroll = debounce(() => console.log('scrolled'), 200);
 - ✅ Full TypeScript support (d.ts included)
 - ✅ Tree‑shakeable (ESM) and CommonJS builds
 - ✅ Zero dependencies, lightweight and fast
+- ✅ Tiny footprint: ~13.9 kB gzipped
 - ✅ Well tested
 - ✅ Modern ES6+
 
