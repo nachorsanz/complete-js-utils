@@ -59,6 +59,8 @@ export const lcm = (a: number, b: number): number => {
 };
 
 export const percentage = (value: number, total: number): number => {
+  // Avoid division by zero; define percentage as 0 when total is 0
+  if (total === 0) return 0;
   return (value / total) * 100;
 };
 
@@ -153,6 +155,8 @@ export const lerp = (start: number, end: number, t: number): number => {
 };
 
 export const map = (value: number, inMin: number, inMax: number, outMin: number, outMax: number): number => {
+  // Handle zero-length input range to avoid division by zero; choose outMin by convention
+  if (inMax === inMin) return outMin;
   return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 };
 

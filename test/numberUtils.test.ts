@@ -57,6 +57,14 @@ describe("NumberUtils", () => {
       expect(result).toBeLessThanOrEqual(10);
       expect(Number.isInteger(result)).toBe(true);
     });
+    it("should be deterministic with mocked Math.random", () => {
+      const original = Math.random;
+      Math.random = () => 0.9999999; // casi 1 -> extremo superior
+      expect(randomInt(1, 10)).toBe(10);
+      Math.random = () => 0; // extremo inferior
+      expect(randomInt(1, 10)).toBe(1);
+      Math.random = original;
+    });
   });
 
   describe("round", () => {
@@ -139,6 +147,10 @@ describe("NumberUtils", () => {
       expect(percentage(25, 100)).toBe(25);
       expect(percentage(1, 4)).toBe(25);
       expect(percentage(3, 4)).toBe(75);
+    });
+    it("should return 0 when total is 0 to avoid division by zero", () => {
+      expect(percentage(50, 0)).toBe(0);
+      expect(percentage(0, 0)).toBe(0);
     });
   });
 
@@ -259,6 +271,40 @@ describe("NumberUtils", () => {
     it("should map value from one range to another", () => {
       expect(map(5, 0, 10, 0, 100)).toBe(50);
       expect(map(2.5, 0, 5, 0, 10)).toBe(5);
+    });
+    it("should return outMin if in range has zero length", () => {
+      expect(map(5, 10, 10, 0, 100)).toBe(0);
+    });
+  });
+
+  describe("product", () => {
+    it("should calculate product of array", () => {
+      expect(product([1, 2, 3, 4])).toBe(24);
+      expect(product([5])).toBe(5);
+      expect(product([])).toBe(1);
+      expect(product([0, 2, 3])).toBe(0);
+    });
+  });
+
+  describe("formatCurrency", () => {
+    it("should format currency according to locale and currency", () => {
+      const value = 1234.56;
+      const expectedUS = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+      const expectedES = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(value);
+
+      expect(formatCurrency(value, "USD", "en-US")).toBe(expectedUS);
+      expect(formatCurrency(value, "EUR", "es-ES")).toBe(expectedES);
+    });
+  });
+
+  describe("formatPercent", () => {
+    it("should format percent according to locale", () => {
+      const value = 0.257; // 25.7%
+      const expectedUS = new Intl.NumberFormat("en-US", { style: "percent" }).format(value);
+      const expectedES = new Intl.NumberFormat("es-ES", { style: "percent" }).format(value);
+
+      expect(formatPercent(value, "en-US")).toBe(expectedUS);
+      expect(formatPercent(value, "es-ES")).toBe(expectedES);
     });
   });
 });
