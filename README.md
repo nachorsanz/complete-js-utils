@@ -1,10 +1,20 @@
 # complete-js-utils
 
-A comprehensive utility library for JavaScript and TypeScript, providing 355+ essential functions across 12 categories for date manipulation, image transformation, sorting, searching, and much more.
+Complete, zero-dependency utility library for JavaScript and TypeScript — hundreds of functions across 15 categories for dates, strings, arrays, objects, numbers, colors, files, images, search/sort, validation, and more.
+
+## What’s new
+
+We’ve added three new categories to keep your toolbox modern and productive:
+
+- 🧠 Function Utils — debounce, throttle, once, memoize, compose, pipe
+- ⏳ Async Utils — delay, retry, withTimeout, pLimit, parallelMap
+- 💾 Storage Utils — safeLocalStorage, safeSessionStorage, JSON helpers, namespacedStorage
+
+These are fully typed and included in the main entry. In the docs site, you’ll see a “New” badge highlighting these additions.
 
 ## Installation
 
-Install the library via npm:
+Install the library via npm or yarn:
 
 ```bash
 npm install complete-js-utils
@@ -14,66 +24,102 @@ yarn add complete-js-utils
 
 ## Quick Start
 
-### JavaScript (CommonJS)
+### TypeScript / ES Modules
 
-```javascript
-const { formatDate, isEmailValid, sortArray } = require('complete-js-utils');
+```ts
+import { formatDate, isEmailValid, sortArray, debounce } from 'complete-js-utils';
 
-// Use the functions
 const date = formatDate(new Date(), 'yyyy-MM-dd');
 const isValid = isEmailValid('test@example.com');
-const sorted = sortArray([{name: 'John', age: 30}, {name: 'Jane', age: 25}], 'age');
+const sorted = sortArray(
+	[
+		{ name: 'John', age: 30 },
+		{ name: 'Jane', age: 25 },
+	],
+	'age',
+	'asc'
+);
+
+const onScroll = debounce(() => console.log('scrolled'), 200);
 ```
 
-### TypeScript (ES Modules)
+### JavaScript / CommonJS
 
-```typescript
-import { formatDate, isEmailValid, sortArray } from 'complete-js-utils';
+```js
+const { formatDate, isEmailValid, sortArray, debounce } = require('complete-js-utils');
 
-// Full type safety included
-const date: string = formatDate(new Date(), 'yyyy-MM-dd');
-const isValid: boolean = isEmailValid('test@example.com');
-const sorted = sortArray([{name: 'John', age: 30}, {name: 'Jane', age: 25}], 'age', 'asc');
+const date = formatDate(new Date(), 'yyyy-MM-dd');
+const isValid = isEmailValid('test@example.com');
+const sorted = sortArray(
+	[
+		{ name: 'John', age: 30 },
+		{ name: 'Jane', age: 25 },
+	],
+	'age'
+);
+
+const onScroll = debounce(() => console.log('scrolled'), 200);
 ```
 
 ## Features
 
-✅ **355+ utility functions** across 12 categories  
-✅ **Full TypeScript support** with complete type definitions  
-✅ **Tree-shakeable** - import only what you need  
-✅ **Zero dependencies** - lightweight and fast  
-✅ **Well tested** - comprehensive test coverage  
-✅ **Modern ES6+** - supports latest JavaScript features
+- ✅ 350+ utility functions across 15 categories
+- ✅ Full TypeScript support (d.ts included)
+- ✅ Tree‑shakeable (ESM) and CommonJS builds
+- ✅ Zero dependencies, lightweight and fast
+- ✅ Well tested
+- ✅ Modern ES6+
 
 ## Categories
 
-- 🔢 **Array Utils**: Array manipulation and processing
-- 🎨 **Color Utils**: Color format conversion and manipulation
-- 📅 **Date Utils**: Date formatting and manipulation
-- 📁 **File Utils**: File operations and utilities
-- 🖼️ **Image Utils**: Image processing functions
-- 🔢 **Number Utils**: Number operations and validations
-- 📦 **Object Utils**: Object manipulation utilities
-- 🔍 **Search Utils**: Search and filtering functions
-- 📊 **Sort Utils**: Sorting algorithms and utilities
-- 📝 **String Utils**: String processing and manipulation
-- 🌐 **URL Utils**: URL parsing and validation
-- ✅ **Validation Utils**: Data validation functions
+- 🔢 Array Utils — array manipulation and processing
+- 🎨 Color Utils — color format conversion and manipulation
+- 📅 Date Utils — date formatting and manipulation
+- 📁 File Utils — file operations and helpers
+- 🖼️ Image Utils — base64/Blob helpers, resize, grayscale, etc.
+- 🔢 Number Utils — math helpers and checks
+- 📦 Object Utils — object manipulation utilities
+- 🔍 Search Utils — search and filtering functions
+- 📊 Sort Utils — sorting helpers and small algorithms
+- 📝 String Utils — string processing and manipulation
+- 🌐 URL Utils — URL parsing and processing
+- ✅ Validation Utils — email, URL, UUID, IP, etc.
+- 🧠 Function Utils — debounce, throttle, once, memoize, compose, pipe
+- ⏳ Async Utils — delay, retry, withTimeout, pLimit, parallelMap
+- 💾 Storage Utils — safe storages, JSON helpers, namespaced storage
 
 ## TypeScript Support
 
-This library is written in TypeScript and provides:
+Written in TypeScript with first‑class types:
 
-- Complete type safety
+- Complete type safety and inference
 - IntelliSense support
-- Type inference
-- Generic type support
+- Generic utilities
 - Declaration files (.d.ts)
-- Source maps for debugging
+- Source maps
 
 ## Documentation
 
-For complete documentation with all 355+ functions and examples, visit: [complete-js-utils.com](https://complete-js-utils.com)
+For full documentation with all functions and examples, visit: https://complete-js-utils.com
+
+## Tree‑shaking
+
+This library is tree‑shakeable in modern bundlers (Vite, Rollup, Webpack production builds):
+
+- Dual builds: CommonJS (main) and ES Module (module).
+- Conditional exports: `package.json#exports` provides `require` and `import` fields.
+- Types: declaration files are published (`types` field).
+- Side‑effect free: `"sideEffects": false` enables dead‑code elimination.
+
+Import only what you need:
+
+```ts
+// ESM
+import { formatDate, debounce } from 'complete-js-utils';
+
+// CommonJS
+const { formatDate, debounce } = require('complete-js-utils');
+```
 
 ## License
 
