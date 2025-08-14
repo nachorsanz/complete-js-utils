@@ -80,6 +80,23 @@ describe("SortUtils", () => {
     ]);
   });
 
+  test("sortByMultipleKeys should not mutate input", () => {
+    const array = [
+      { name: "Bob", age: 25 },
+      { name: "Alice", age: 30 },
+      { name: "Bob", age: 20 },
+    ];
+
+    const original = [...array];
+
+    sortByMultipleKeys(array, [
+      { key: "name", order: "asc" },
+      { key: "age", order: "asc" },
+    ]);
+
+    expect(array).toEqual(original);
+  });
+
   test("sorts array of objects using a custom comparator", () => {
     const array = [
       { name: "Bob", age: 25 },

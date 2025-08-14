@@ -7,7 +7,7 @@ export const sortArray = <T>(array: T[], key: keyof T, order: "asc" | "desc" = "
 };
 
 export const sortByMultipleKeys = <T>(array: T[], keys: { key: keyof T; order: "asc" | "desc" }[]): T[] => {
-  return array.sort((a, b) => {
+  return [...array].sort((a, b) => {
     for (const { key, order } of keys) {
       if (a[key] < b[key]) return order === "asc" ? -1 : 1;
       if (a[key] > b[key]) return order === "asc" ? 1 : -1;
