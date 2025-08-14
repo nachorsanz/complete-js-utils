@@ -92,6 +92,19 @@ describe("SortUtils", () => {
     ]);
   });
 
+  test("sortByCustomComparator should not mutate input", () => {
+    const array = [
+      { name: "Alice", age: 30 },
+      { name: "Bob", age: 25 },
+    ];
+
+    const original = [...array];
+
+    sortByCustomComparator(array, (a, b) => a.age - b.age);
+
+    expect(array).toEqual(original);
+  });
+
   test("finds minimum element by key", () => {
     const array = [
       { name: "Bob", age: 25 },

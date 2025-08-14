@@ -17,7 +17,7 @@ export const sortByMultipleKeys = <T>(array: T[], keys: { key: keyof T; order: "
 };
 
 export const sortByCustomComparator = <T>(array: T[], comparator: (a: T, b: T) => number): T[] => {
-  return array.sort(comparator);
+  return [...array].sort(comparator);
 };
 
 // export const groupBy = <T>(array: T[], key: keyof T): Record<string, T[]> => {
