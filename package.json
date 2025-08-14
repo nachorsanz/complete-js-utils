@@ -1,6 +1,6 @@
 {
   "name": "complete-js-utils",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A complete utility library for JavaScript and TypeScript",
   "main": "dist/index.js",
   "module": "dist/esm/index.mjs",
