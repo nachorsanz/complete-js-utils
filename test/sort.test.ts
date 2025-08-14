@@ -50,6 +50,19 @@ describe("SortUtils", () => {
     expect(sorted[0].age).toBe(30);
   });
 
+  test("sortArray should not mutate input", () => {
+    const array = [
+      { name: "Bob", age: 25 },
+      { name: "Alice", age: 30 },
+    ];
+
+    const original = [...array];
+
+    sortArray(array, "age", "desc");
+
+    expect(array).toEqual(original);
+  });
+
   test("sorts array of objects by multiple keys", () => {
     const array = [
       { name: "Bob", age: 25 },
