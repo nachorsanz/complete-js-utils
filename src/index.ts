@@ -13,3 +13,4 @@ export * from "./fileUtils";
 export * from "./functionUtils";
 export * from "./asyncUtils";
 export * from "./storageUtils";
+export * from "./domUtils";
