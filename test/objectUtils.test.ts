@@ -1,25 +1,27 @@
 import {
+  camelCaseObjectKeys,
   clone,
-  merge,
-  pick,
-  omit,
+  countBy,
+  entries,
+  flatten,
+  fromEntries,
   get,
-  set,
+  groupBy,
   has,
+  indexBy,
+  invert,
   isEmpty,
   isEqual,
   keys,
-  values,
-  entries,
-  fromEntries,
-  mapValues,
   mapKeys,
-  invert,
-  groupBy,
-  countBy,
-  indexBy,
-  flatten,
+  mapValues,
+  merge,
+  omit,
+  pick,
+  set,
+  snakeCaseObjectKeys,
   unflatten,
+  values,
 } from "../src/objectUtils";
 import { describe, expect } from "@jest/globals";
 
@@ -253,6 +255,104 @@ describe("ObjectUtils", () => {
       const flattened = { "a.b.c": 1, d: 2 };
       const result = unflatten(flattened);
       expect(result).toEqual({ a: { b: { c: 1 } }, d: 2 });
+    });
+  });
+
+  describe("camelCaseObjectKeys", () => {
+    it("should convert object keys to camelCase (deep)", () => {
+      const obj = { first_name: "John", last_name: "Doe", address_info: { street_name: "Main St" } };
+      const result = camelCaseObjectKeys(obj, true);
+      expect(result).toEqual({ firstName: "John", lastName: "Doe", addressInfo: { streetName: "Main St" } });
+    });
+
+    it("should convert object keys to camelCase", () => {
+      const obj = { first_name: "John", last_name: "Doe", address_info: { street_name: "Main St" } };
+      const result = camelCaseObjectKeys(obj, false);
+      expect(result).toEqual({ firstName: "John", lastName: "Doe", addressInfo: { street_name: "Main St" } });
+    });
+
+    it("should handle arrays of objects when deep is true", () => {
+      const obj = {
+        users: [
+          { first_name: "John" },
+          { first_name: "Jane" },
+        ],
+      };
+      const result = camelCaseObjectKeys(obj, true);
+      expect(result).toEqual({
+        users: [
+          { firstName: "John" },
+          { firstName: "Jane" },
+        ],
+      });
+    });
+
+    it("should not modify original object", () => {
+      const obj = { first_name: "John", last_name: "Doe" };
+      const result = camelCaseObjectKeys(obj);
+      expect(obj).toEqual({ first_name: "John", last_name: "Doe" });
+      expect(result).toEqual({ firstName: "John", lastName: "Doe" });
+    });
+
+    it("should handle empty object", () => {
+      const obj = {};
+      const result = camelCaseObjectKeys(obj);
+      expect(result).toEqual({});
+    });
+
+    it("should handle non-object values gracefully", () => {
+      expect(camelCaseObjectKeys(null as any)).toEqual({});
+      expect(camelCaseObjectKeys(123 as any)).toEqual({});
+      expect(camelCaseObjectKeys("string" as any)).toEqual({});
+    });
+  });
+
+  describe("snakeCaseObjectKeys", () => {
+    it("should convert object keys to snake_case (deep)", () => {
+      const obj = { firstName: "John", lastName: "Doe", addressInfo: { streetName: "Main St" } };
+      const result = snakeCaseObjectKeys(obj, true);
+      expect(result).toEqual({ first_name: "John", last_name: "Doe", address_info: { street_name: "Main St" } });
+    });
+
+    it("should convert object keys to snake_case", () => {
+      const obj = { firstName: "John", lastName: "Doe", addressInfo: { streetName: "Main St" } };
+      const result = snakeCaseObjectKeys(obj, false);
+      expect(result).toEqual({ first_name: "John", last_name: "Doe", address_info: { streetName: "Main St" } });
+    });
+
+    it("should handle arrays of objects when deep is true", () => {
+      const obj = {
+        users: [
+          { firstName: "John" },
+          { firstName: "Jane" },
+        ],
+      };
+      const result = snakeCaseObjectKeys(obj, true);
+      expect(result).toEqual({
+        users: [
+          { first_name: "John" },
+          { first_name: "Jane" },
+        ],
+      });
+    });
+
+    it("should not modify original object", () => {
+      const obj = { firstName: "John", lastName: "Doe" };
+      const result = snakeCaseObjectKeys(obj);
+      expect(obj).toEqual({ firstName: "John", lastName: "Doe" });
+      expect(result).toEqual({ first_name: "John", last_name: "Doe" });
+    });
+
+    it("should handle empty object", () => {
+      const obj = {};
+      const result = snakeCaseObjectKeys(obj);
+      expect(result).toEqual({});
+    });
+
+    it("should handle non-object values gracefully", () => {
+      expect(snakeCaseObjectKeys(null as any)).toEqual({});
+      expect(snakeCaseObjectKeys(123 as any)).toEqual({});
+      expect(snakeCaseObjectKeys("string" as any)).toEqual({});
     });
   });
 });
