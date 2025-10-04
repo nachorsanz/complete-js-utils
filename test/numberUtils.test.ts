@@ -1,36 +1,38 @@
 import {
+  average,
   clamp,
-  random,
-  randomInt,
-  round,
-  toFixed,
+  countDecimals,
+  factorial,
+  fibonacci,
+  formatCurrency,
+  formatNumber,
+  formatPercent,
+  gcd,
+  inRange,
   isEven,
   isOdd,
   isPrime,
-  factorial,
-  fibonacci,
-  gcd,
   lcm,
-  percentage,
-  percentageOf,
-  average,
-  median,
-  mode,
-  sum,
-  product,
-  max,
-  min,
-  range,
-  standardDeviation,
-  variance,
-  toRadians,
-  toDegrees,
-  formatNumber,
-  formatCurrency,
-  formatPercent,
   lerp,
   map,
-  inRange,
+  max,
+  median,
+  min,
+  mode,
+  parseCurrency,
+  percentage,
+  percentageOf,
+  product,
+  random,
+  randomInt,
+  range,
+  round,
+  standardDeviation,
+  sum,
+  toDegrees,
+  toFixed,
+  toRadians,
+  variance,
 } from "../src/numberUtils";
 import { describe, expect } from "@jest/globals";
 
@@ -306,6 +308,41 @@ describe("NumberUtils", () => {
 
       expect(formatPercent(value, "en-US")).toBe(expectedUS);
       expect(formatPercent(value, "es-ES")).toBe(expectedES);
+    });
+  });
+
+  describe("parseCurrency", () => {
+    it("should parse currency strings into numbers", () => {
+      expect(parseCurrency("$1,234.56")).toBeCloseTo(1234.56);
+      expect(parseCurrency("€1.234,56")).toBeCloseTo(1234.56);
+      expect(parseCurrency("£1 234,56")).toBeCloseTo(1234.56);
+      expect(parseCurrency("1234.56")).toBeCloseTo(1234.56);
+      expect(parseCurrency("1234,56")).toBeCloseTo(1234.56);
+      expect(parseCurrency("1,234")).toBeCloseTo(1234);
+      expect(parseCurrency("1.234", 'eu')).toBeCloseTo(1234);
+      expect(parseCurrency("1.234", 'us')).toBeCloseTo(1.234);
+      expect(parseCurrency("invalid")).toBeNaN();
+      expect(parseCurrency("")).toBeNaN();
+      expect(parseCurrency()).toBeNaN();
+    });
+  });
+
+  describe("countDecimals", () => {
+    it("should count the number of decimal places", () => {
+      expect(countDecimals(123.456)).toBe(3);
+      expect(countDecimals(123.4)).toBe(1);
+      expect(countDecimals(123)).toBe(0);
+      expect(countDecimals(0.1)).toBe(1);
+      expect(countDecimals(0.123456)).toBe(6);
+    });
+    it("should handle scientific notation", () => {
+      expect(countDecimals(1.23e-10)).toBe(12);
+      expect(countDecimals(1.23e+5)).toBe(0);
+    });
+    it("should return 0 for non-finite numbers", () => {
+      expect(countDecimals(NaN)).toBe(0);
+      expect(countDecimals(Infinity)).toBe(0);
+      expect(countDecimals(-Infinity)).toBe(0);
     });
   });
 });
