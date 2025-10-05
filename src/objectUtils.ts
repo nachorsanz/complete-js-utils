@@ -2,6 +2,8 @@
  * Object utility functions
  */
 
+import { camelCase, snakeCase } from "./stringUtils";
+
 export const clone = <T>(obj: T): T => {
   if (obj === null || typeof obj !== "object") return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
@@ -241,3 +243,45 @@ export const unflatten = (obj: Record<string, any>, separator: string = "."): an
 const isPlainObject = (value: any): value is object => {
   return value != null && typeof value === "object" && value.constructor === Object;
 };
+
+export const camelCaseObjectKeys = (obj: Record<string, unknown>, deep: boolean = false): Record<string, unknown> => {
+  if (!isPlainObject(obj)) return {};
+  if (isEmpty(obj)) return {};
+  const result: Record<string, unknown> = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const camelKey = camelCase(key);
+      if (deep && isPlainObject(obj[key])) {
+        result[camelKey] = camelCaseObjectKeys(obj[key] as Record<string, unknown>, true);
+      } else if (deep && Array.isArray(obj[key])) {
+        result[camelKey] = (obj[key] as unknown[]).map((item) =>
+          isPlainObject(item) ? camelCaseObjectKeys(item as Record<string, unknown>, true) : item,
+        );
+      } else {
+        result[camelKey] = obj[key];
+      }
+    }
+  }
+  return result;
+}
+
+export const snakeCaseObjectKeys = (obj: Record<string, unknown>, deep: boolean = false): Record<string, unknown> => {
+  if (!isPlainObject(obj)) return {};
+  if (isEmpty(obj)) return {};
+  const result: Record<string, unknown> = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const snakeKey = snakeCase(key);
+      if (deep && isPlainObject(obj[key])) {
+        result[snakeKey] = snakeCaseObjectKeys(obj[key] as Record<string, unknown>, true);
+      } else if (deep && Array.isArray(obj[key])) {
+        result[snakeKey] = (obj[key] as unknown[]).map((item) =>
+          isPlainObject(item) ? snakeCaseObjectKeys(item as Record<string, unknown>, true) : item,
+        );
+      } else {
+        result[snakeKey] = obj[key];
+      }
+    }
+  }
+  return result;
+}
