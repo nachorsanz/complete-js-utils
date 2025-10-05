@@ -163,3 +163,69 @@ export const map = (value: number, inMin: number, inMax: number, outMin: number,
 export const inRange = (num: number, min: number, max: number): boolean => {
   return num >= min && num <= max;
 };
+
+/**
+ * Converts a currency-formatted string into a number.
+ * Removes symbols, spaces, and thousand separators.
+ */
+export function parseCurrency(value?: string, locale: "us" | "eu" = "us"): number {
+  if (!value) return NaN
+
+  let cleaned = value.replace(/[^\d.,-]/g, "").trim()
+  const hasComma = cleaned.includes(",")
+  const hasDot = cleaned.includes(".")
+
+  let normalized = cleaned
+
+  if (hasComma && hasDot) {
+    if (cleaned.lastIndexOf(",") > cleaned.lastIndexOf(".")) {
+      normalized = cleaned.replace(/\./g, "").replace(",", ".")
+    } else {
+      normalized = cleaned.replace(/,/g, "")
+    }
+  } else if (hasComma) {
+    const parts = cleaned.split(",")
+    if (parts[1]?.length === 2) {
+      normalized = cleaned.replace(",", ".")
+    } else {
+      normalized = cleaned.replace(/,/g, "")
+    }
+  } else if (hasDot) {
+    const parts = cleaned.split(".")
+    if (parts[1]?.length === 2) {
+      normalized = cleaned
+    } else {
+      normalized = locale === "eu" ? cleaned.replace(/\./g, "") : cleaned
+    }
+  }
+
+  return parseFloat(normalized)
+}
+
+/**
+ * Counts the number of decimal places of a number using math only,
+ * ignoring floating-point artifacts.
+ *
+ * @param value The number to evaluate
+ * @param maxDecimals Maximum decimals to check (default 16, the precision limit of IEEE-754 double)
+ */
+export function countDecimals(value: number, maxDecimals: number = 16): number {
+  if (!Number.isFinite(value) || Number.isNaN(value)) return 0;
+
+  let e = 1;
+  let count = 0;
+
+  while (count < maxDecimals) {
+    const multiplied = value * e;
+
+    // Use a tolerance to avoid floating-point precision issues
+    if (Math.abs(Math.round(multiplied) - multiplied) < Number.EPSILON * e) {
+      break;
+    }
+
+    e *= 10;
+    count++;
+  }
+
+  return count;
+}
