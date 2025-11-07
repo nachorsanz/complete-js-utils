@@ -1,105 +1,87 @@
-import { expect, test, describe } from "@jest/globals";
 import {
-  // Basic date operations
-  createDateFormatter,
-  formatDate,
-  parseDate,
-  toISOString,
-  toTimestamp,
-  fromTimestamp,
-  isValidDate,
-
-  // Date arithmetic
   addDays,
   addHours,
   addMinutes,
   addMonths,
   addSeconds,
   addYears,
-  subtractDays,
-
-  // Date differences
+  age,
+  createDateFormatter,
   differenceInDays,
   differenceInHours,
   differenceInMinutes,
   differenceInMonths,
   differenceInSeconds,
   differenceInYears,
-
-  // Date comparisons
-  isBefore,
-  isAfter,
-  isBetween,
-  isSameDay,
-  isSameMonth,
-  isSameYear,
-  isSameWeek,
-
-  // Weekend/weekday checks
-  isWeekend,
-  isWeekendDay,
-  isWeekendDate,
-  isWeekday,
-  isWeekdayEnd,
-
-  // Date type checks
-  isToday,
-  isTomorrow,
-  isYesterday,
-  isFuture,
-  isPast,
-
-  // Specific day checks
-  isMonday,
-  isTuesday,
-  isWednesday,
-  isThursday,
-  isFriday,
-  isSaturday,
-  isSunday,
-
-  // Start/end of period
-  startOfDay,
   endOfDay,
-  startOfWeek,
-  endOfWeek,
-  startOfMonth,
   endOfMonth,
-  startOfQuarter,
   endOfQuarter,
-  startOfYear,
+  endOfWeek,
   endOfYear,
-
-  // Month/year edge checks
-  isFirstDayOfMonth,
-  isLastDayOfMonth,
-  isFirstMonth,
-  isLastMonth,
-  isFirstYear,
-  isLastYear,
-
-  // Various getters
+  formatDate,
+  fromTimestamp,
   getDayOfYear,
-  getWeekNumber,
-  getWeeksInMonth,
-  getQuarter,
+  getDaysArray,
   getDaysInMonth,
   getFirstDayOfMonth,
   getLastDayOfMonth,
   getMonthName,
-  getShortMonthName,
-  getWeekdayName,
-  getShortWeekdayName,
-  getDaysArray,
   getMonthsArray,
+  getQuarter,
+  getShortMonthName,
   getShortMonthsArray,
-  getWeekdaysArray,
+  getShortWeekdayName,
   getShortWeekdaysArray,
+  getWeekNumber,
+  getWeekdayName,
+  getWeekdaysArray,
+  getWeeksInMonth,
   getYearsArray,
+  isAfter,
+  isBefore,
+  isBetween,
+  isFirstDayOfMonth,
+  isFirstMonth,
+  isFirstYear,
+  isFriday,
+  isFuture,
+  isLastDayOfMonth,
+  isLastMonth,
+  isLastYear,
   isLeapYear,
-  age,
+  isMonday,
+  isPast,
+  isSameDay,
+  isSameMonth,
+  isSameWeek,
+  isSameYear,
+  isSaturday,
+  isSunday,
+  isThursday,
+  isToday,
+  isTomorrow,
+  isTuesday,
+  isValidDate,
+  isWednesday,
+  isWeekday,
+  isWeekdayEnd,
+  isWeekend,
+  isWeekendDate,
+  isWeekendDay,
+  isYesterday,
+  parseDate,
+  parseTimeString,
+  startOfDay,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear,
+  subtractDays,
   timeAgo,
+  toISOString,
+  toTimestamp,
 } from "../src/dateUtils/dateUtils";
+import { describe, expect, test } from "@jest/globals";
 
 describe("Date Utils", () => {
   const testDate = new Date("2023-07-09"); // Sunday
@@ -1073,6 +1055,158 @@ describe("Date Utils", () => {
       const twoYearsAgo = new Date(Date.now() - 2 * 365 * 24 * 60 * 60 * 1000);
       const yearsAgoString = timeAgo(twoYearsAgo);
       expect(yearsAgoString).toContain("year");
+    });
+  });
+
+  describe('parseTimeString', () => {
+    // Basic conversions with default output (seconds)
+    describe('default output unit (seconds)', () => {
+        it('should convert milliseconds to seconds', () => {
+            expect(parseTimeString('1000ms')).toBe(1);
+            expect(parseTimeString('5000ms')).toBe(5);
+        });
+
+        it('should convert seconds to seconds', () => {
+            expect(parseTimeString('1s')).toBe(1);
+            expect(parseTimeString('30s')).toBe(30);
+        });
+
+        it('should convert minutes to seconds', () => {
+            expect(parseTimeString('1m')).toBe(60);
+            expect(parseTimeString('15m')).toBe(900);
+        });
+
+        it('should convert hours to seconds', () => {
+            expect(parseTimeString('1h')).toBe(3600);
+            expect(parseTimeString('2h')).toBe(7200);
+        });
+
+        it('should convert days to seconds', () => {
+            expect(parseTimeString('1d')).toBe(86400);
+            expect(parseTimeString('2d')).toBe(172800);
+        });
+
+        it('should convert weeks to seconds', () => {
+            expect(parseTimeString('1w')).toBe(604800);
+            expect(parseTimeString('2w')).toBe(1209600);
+        });
+    });
+
+    // Conversions to specific output units
+    describe('custom output units', () => {
+        it('should convert to milliseconds', () => {
+            expect(parseTimeString('1s', 'ms')).toBe(1000);
+            expect(parseTimeString('1m', 'ms')).toBe(60000);
+            expect(parseTimeString('1h', 'ms')).toBe(3600000);
+        });
+
+        it('should convert to minutes', () => {
+            expect(parseTimeString('60s', 'm')).toBe(1);
+            expect(parseTimeString('1h', 'm')).toBe(60);
+            expect(parseTimeString('1d', 'm')).toBe(1440);
+        });
+
+        it('should convert to hours', () => {
+            expect(parseTimeString('60m', 'h')).toBe(1);
+            expect(parseTimeString('1d', 'h')).toBe(24);
+            expect(parseTimeString('1w', 'h')).toBe(168);
+        });
+
+        it('should convert to days', () => {
+            expect(parseTimeString('24h', 'd')).toBe(1);
+            expect(parseTimeString('1w', 'd')).toBe(7);
+            expect(parseTimeString('48h', 'd')).toBe(2);
+        });
+
+        it('should convert to weeks', () => {
+            expect(parseTimeString('7d', 'w')).toBe(1);
+            expect(parseTimeString('14d', 'w')).toBe(2);
+            expect(parseTimeString('168h', 'w')).toBe(1);
+        });
+    });
+
+    // Decimal values
+    describe('decimal values', () => {
+        it('should handle decimal input values', () => {
+            expect(parseTimeString('1.5h', 'm')).toBe(90);
+            expect(parseTimeString('2.5m', 's')).toBe(150);
+            expect(parseTimeString('0.5d', 'h')).toBe(12);
+        });
+
+        it('should return decimal output values when needed', () => {
+            expect(parseTimeString('30s', 'm')).toBe(0.5);
+            expect(parseTimeString('30m', 'h')).toBe(0.5);
+            expect(parseTimeString('12h', 'd')).toBe(0.5);
+        });
+    });
+
+    // Edge cases
+    describe('edge cases', () => {
+        it('should handle zero values', () => {
+            expect(parseTimeString('0s')).toBe(0);
+            expect(parseTimeString('0m', 'h')).toBe(0);
+        });
+
+        it('should handle very large values', () => {
+            expect(parseTimeString('1000h', 'd')).toBe(1000 / 24);
+            expect(parseTimeString('365d', 'w')).toBe(365 / 7);
+        });
+
+        it('should handle whitespace in input', () => {
+            expect(parseTimeString(' 1h ')).toBe(3600);
+            expect(parseTimeString('  15m  ', 's')).toBe(900);
+        });
+    });
+
+    // Same unit conversions
+    describe('same unit conversions', () => {
+        it('should return the same value when input and output units match', () => {
+            expect(parseTimeString('5s', 's')).toBe(5);
+            expect(parseTimeString('10m', 'm')).toBe(10);
+            expect(parseTimeString('3h', 'h')).toBe(3);
+        });
+    });
+
+    // Error cases
+    describe('error handling', () => {
+        it('should throw error for invalid format', () => {
+            expect(() => parseTimeString('invalid')).toThrow('Invalid time format: invalid');
+            expect(() => parseTimeString('123')).toThrow('Invalid time format: 123');
+            expect(() => parseTimeString('h1')).toThrow('Invalid time format: h1');
+        });
+
+        it('should throw error for invalid units', () => {
+            expect(() => parseTimeString('1x')).toThrow('Invalid time format: 1x');
+            expect(() => parseTimeString('1 hour')).toThrow();
+        });
+
+        it('should throw error for empty string', () => {
+            expect(() => parseTimeString('')).toThrow();
+            expect(() => parseTimeString('   ')).toThrow();
+        });
+
+        it('should throw error for negative values', () => {
+            expect(() => parseTimeString('-1h')).toThrow();
+            expect(() => parseTimeString('-5m')).toThrow();
+        });
+    });
+
+    // Real-world use cases
+    describe('real-world scenarios', () => {
+        it('should handle common session timeout durations', () => {
+            expect(parseTimeString('30m', 's')).toBe(1800); // 30 minutes session
+            expect(parseTimeString('1h', 'ms')).toBe(3600000); // 1 hour token expiry
+        });
+
+        it('should handle common cache durations', () => {
+            expect(parseTimeString('5m', 's')).toBe(300); // 5 minutes cache
+            expect(parseTimeString('24h', 's')).toBe(86400); // 24 hours cache
+        });
+
+        it('should handle rate limiting windows', () => {
+            expect(parseTimeString('1m', 'ms')).toBe(60000); // 1 minute rate limit
+            expect(parseTimeString('15m', 's')).toBe(900); // 15 minutes window
+        });
     });
   });
 });
