@@ -471,3 +471,5 @@ export type FormatDateOptions = {
 }
 
 export type DateFormat =  "ISO_8601" | string
+
+export type TimeUnit = 'ms' | 's' | 'm' | 'h' | 'd' | 'w';

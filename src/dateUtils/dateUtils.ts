@@ -1,4 +1,4 @@
-import { DateCountry, DateFormat, FormatDateOptions } from "./dateUtils.types";
+import { DateCountry, DateFormat, FormatDateOptions, TimeUnit } from "./dateUtils.types";
 
 export const createDateFormatter = (
   { locale, timezone }: FormatDateOptions = { timezone: "Europe/Madrid", locale: "es-ES" },
@@ -507,3 +507,33 @@ export const isLastYear = (date: Date): boolean => {
 export const isFirstYear = (date: Date): boolean => {
   return date.getFullYear() === 1000;
 };
+
+// Method to parse time strings like "5m", "2h", "300s" into milliseconds or other units
+export function parseTimeString(
+    input: string,
+    outputUnit: TimeUnit = 's',
+): number {
+    const regex = /^(\d+(?:\.\d+)?)(ms|s|m|h|d|w)$/;
+    const match = input.trim().match(regex);
+
+    if (!match) {
+        throw new Error(`Invalid time format: ${input}`);
+    }
+
+    const value = parseFloat(match[1]);
+    const unit = match[2] as TimeUnit;
+
+    const msConversions: Record<TimeUnit, number> = {
+        ms: 1,
+        s: 1000,
+        m: 60 * 1000,
+        h: 60 * 60 * 1000,
+        d: 24 * 60 * 60 * 1000,
+        w: 7 * 24 * 60 * 60 * 1000,
+    };
+
+    const milliseconds = value * msConversions[unit];
+
+    // Convert from milliseconds to the desired unit
+    return milliseconds / msConversions[outputUnit];
+}
