@@ -1008,15 +1008,22 @@ describe("Date Utils", () => {
       expect(ageValue).toBeGreaterThan(30);
 
       // Test edge case: birthday not yet reached this year (should decrement age)
+      // Use a fixed future date that will always be in the future relative to today
       const today = new Date();
-      const futureMonth = new Date(today.getFullYear(), today.getMonth() + 2, today.getDate());
-      const birthDateFuture = new Date(today.getFullYear() - 25, futureMonth.getMonth(), futureMonth.getDate());
-      expect(age(birthDateFuture)).toBe(24); // Age should be decremented
+      // Create a birth date 25 years ago but with a future month (December)
+      const birthDateFuture = new Date(today.getFullYear() - 25, 11, 31); // December 31st
+      const calculatedAge = age(birthDateFuture);
+      // If today is before December 31, age should be 24, otherwise 25
+      const expectedAge = today.getMonth() < 11 || (today.getMonth() === 11 && today.getDate() < 31) ? 24 : 25;
+      expect(calculatedAge).toBe(expectedAge);
 
-      // Test edge case: same month but birthday not yet reached (should decrement age)
-      const sameMontFuture = new Date(today.getFullYear() - 30, today.getMonth(), today.getDate() + 5);
-      const ageNotReached = age(sameMontFuture);
-      expect(ageNotReached).toBe(29); // Should be decremented
+      // Test with a specific known date
+      const birthDatePast = new Date("1995-06-15");
+      const referenceDate = new Date("2023-06-14"); // Day before birthday
+      expect(age(birthDatePast, referenceDate)).toBe(27);
+      
+      const referenceDateAfter = new Date("2023-06-15"); // On birthday
+      expect(age(birthDatePast, referenceDateAfter)).toBe(28);
     });
 
     test("timeAgo - gets time ago string", () => {
