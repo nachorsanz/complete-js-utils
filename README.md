@@ -101,7 +101,7 @@ Written in TypeScript with first‑class types:
 
 ## Documentation
 
-For full documentation with all functions and examples, visit: https://complete-js-utils.com
+For full documentation with all functions and examples, visit: [https://complete-js-utils.com](https://complete-js-utils-docs.vercel.app/)
 
 ## Tree‑shaking
 
