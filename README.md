@@ -27,7 +27,7 @@ yarn add complete-js-utils
 ### TypeScript / ES Modules
 
 ```ts
-import { formatDate, isEmailValid, sortArray, debounce } from 'complete-js-utils';
+import { formatDate, isEmailValid, sortArray, debounce, on, delegate } from 'complete-js-utils';
 
 const date = formatDate(new Date(), 'yyyy-MM-dd');
 const isValid = isEmailValid('test@example.com');
@@ -41,12 +41,16 @@ const sorted = sortArray(
 );
 
 const onScroll = debounce(() => console.log('scrolled'), 200);
+
+// DOM event helpers
+on(document.querySelector('#myButton'), 'click', () => console.log('clicked'));
+delegate(document.body, '.dynamic-button', 'click', (e) => console.log('delegated click'));
 ```
 
 ### JavaScript / CommonJS
 
 ```js
-const { formatDate, isEmailValid, sortArray, debounce } = require('complete-js-utils');
+const { formatDate, isEmailValid, sortArray, debounce, on, delegate } = require('complete-js-utils');
 
 const date = formatDate(new Date(), 'yyyy-MM-dd');
 const isValid = isEmailValid('test@example.com');
@@ -59,11 +63,16 @@ const sorted = sortArray(
 );
 
 const onScroll = debounce(() => console.log('scrolled'), 200);
+
+// DOM event helpers
+on(document.querySelector('#myButton'), 'click', () => console.log('clicked'));
+delegate(document.body, '.dynamic-button', 'click', (e) => console.log('delegated click'));
+```
 ```
 
 ## Features
 
-- ✅ 350+ utility functions across 15 categories
+- ✅ 350+ utility functions across 16 categories
 - ✅ Full TypeScript support (d.ts included)
 - ✅ Tree‑shakeable (ESM) and CommonJS builds
 - ✅ Zero dependencies, lightweight and fast
@@ -76,6 +85,7 @@ const onScroll = debounce(() => console.log('scrolled'), 200);
 - 🔢 Array Utils — array manipulation and processing
 - 🎨 Color Utils — color format conversion and manipulation
 - 📅 Date Utils — date formatting and manipulation
+- 🌐 DOM Utils — event handling helpers (on, off, delegate)
 - 📁 File Utils — file operations and helpers
 - 🖼️ Image Utils — base64/Blob helpers, resize, grayscale, etc.
 - 🔢 Number Utils — math helpers and checks
@@ -116,10 +126,10 @@ Import only what you need:
 
 ```ts
 // ESM
-import { formatDate, debounce } from 'complete-js-utils';
+import { formatDate, debounce, on, delegate } from 'complete-js-utils';
 
 // CommonJS
-const { formatDate, debounce } = require('complete-js-utils');
+const { formatDate, debounce, on, delegate } = require('complete-js-utils');
 ```
 
 ## License
